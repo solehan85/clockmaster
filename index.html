@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CLOCK MASTER - Become The Master of Time!</title>
+    <style>
+        :root {
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --success: #00ff87;
+            --warning: #f9d423;
+            --danger: #ff4e50;
+            --purple: #b184ff;
+            --orange: #ff9233;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-size: 400% 400%;
+            animation: gradientBg 15s ease infinite;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 15px;
+        }
+
+        @keyframes gradientBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.05);
+            text-align: center;
+            position: relative;
+        }
+
+        /* Glassmorphism Components */
+        .glass-panel {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Typography & Animations */
+        h1.logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--purple), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 242, 254, 0.5);
+            margin-bottom: 5px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        h2.subtitle {
+            font-size: 1.3rem;
+            color: var(--warning);
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Buttons & Interactions */
+        .btn {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border: none;
+            color: white;
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+            margin: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.6);
+        }
+
+        .btn:active { transform: scale(0.95); }
+        
+        .btn-purple { background: linear-gradient(135deg, #7f00ff, #e100ff); box-shadow: 0 5px 15px rgba(127, 0, 255, 0.4); }
+        .btn-green { background: linear-gradient(135deg, #11998e, #38ef7d); box-shadow: 0 5px 15px rgba(56, 239, 125, 0.4); }
+        .btn-orange { background: linear-gradient(135deg, #ff416c, #ff4b2b); box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4); }
+
+        /* Screens Layout */
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Dashboard HUD */
+        .hud {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .hud-item {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .hud-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        /* Year Selection Cards */
+        .grid-select {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-select { grid-template-columns: repeat(2, 1fr); }
+            h1.logo { font-size: 2.3rem; }
+        }
+
+        .card-select {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 25px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-select:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: var(--warning);
+            transform: translateY(-5px);
+        }
+
+        /* Canvas Arena & Game Elements */
+        .game-arena {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #clockCanvas {
+            background: radial-gradient(circle, #2c5364, #203a43);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(0, 242, 254, 0.3), inset 0 0 30px rgba(0,0,0,0.6);
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .digital-display {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--success);
+            text-shadow: 0 0 15px var(--success);
+            background: #000;
+            padding: 10px 30px;
+            border-radius: 10px;
+            letter-spacing: 2px;
+            border: 2px solid rgba(0, 255, 135, 0.3);
+        }
+
+        .question-box {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #fff;
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 5px solid var(--orange);
+            background: rgba(255,255,255,0.02);
+            text-align: left;
+        }
+
+        .options-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 15px;
+        }
+
+        /* Overlay Feedbacks */
+        .feedback-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 30px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+        }
+
+        .feedback-correct { background: rgba(0, 255, 135, 0.15); color: var(--success); }
+        .feedback-wrong { background: rgba(255, 78, 80, 0.15); color: var(--danger); }
+
+        .feedback-text {
+            font-size: 3rem;
+            font-weight: 900;
+            text-shadow: 0 0 20px rgba(0,0,0,0.8);
+            animation: bounce 0.6s ease infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        canvas#confetti {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            border-radius: 30px;
+        }
+
+        /* Lists layout for tables */
+        .score-list, .achievement-list {
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <canvas id="confetti"></canvas>
+        
+        <div id="feedbackOverlay" class="feedback-overlay">
+            <div id="feedbackText" class="feedback-text">EXCELLENT!</div>
+            <div id="feedbackSub" style="font-size:1.2rem; color: #fff; margin-top:10px;"></div>
+        </div>
